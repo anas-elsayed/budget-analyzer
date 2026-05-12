@@ -1,4 +1,3 @@
-
 import { parseContacts } from './contacts.js';
 import { parseTransactions } from './parser.js';
 import { categorizeTransaction } from './categorizer.js';
@@ -9,34 +8,48 @@ let transactions = [];
 
 const importBtn = document.getElementById('importBtn');
 
-importBtn.addEventListener('click', async ()=>{
+importBtn.addEventListener('click', async () => {
 
-  const contactsFile = document.getElementById('contactsFile').files[0];
-  const transactionsFile = document.getElementById('transactionsFile').files[0];
+  const contactsFile =
+    document.getElementById('contactsFile').files[0];
 
-  if(contactsFile){
+  const transactionsFile =
+    document.getElementById('transactionsFile').files[0];
+
+  if (contactsFile) {
 
     const contactsText = await contactsFile.text();
 
     contacts = parseContacts(contactsText);
 
-    console.log("Contacts Imported", contacts);
+    console.log('Contacts Imported', contacts);
   }
 
-  if(transactionsFile){
+  if (transactionsFile) {
 
-    const txText = await transactionsFile.text();
+    let txText = '';
+
+    if (transactionsFile.name.toLowerCase().endsWith('.pdf')) {
+
+      txText = await extractPDFText(transactionsFile);
+
+    } else {
+
+      txText = await transactionsFile.text();
+
+    }
 
     transactions = parseTransactions(txText);
 
-    transactions = transactions.map(tx=>{
+    transactions = transactions.map(tx => {
 
-      const result = categorizeTransaction(tx, contacts);
+      const result =
+        categorizeTransaction(tx, contacts);
 
       return {
         ...tx,
-        category:result.category,
-        confidence:result.confidence
+        category: result.category,
+        confidence: result.confidence
       };
 
     });
@@ -48,23 +61,50 @@ importBtn.addEventListener('click', async ()=>{
 
 });
 
-function renderTransactions(transactions){
+async function extractPDFText(file) {
 
-  const tbody = document.querySelector('#transactionsTable tbody');
+  const arrayBuffer = await file.arrayBuffer();
 
-  tbody.innerHTML = "";
+  const pdf =
+    await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-  transactions.forEach(tx=>{
+  let fullText = '';
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+
+    const page = await pdf.getPage(pageNum);
+
+    const textContent = await page.getTextContent();
+
+    const pageText = textContent.items
+      .map(item => item.str)
+      .join(' ');
+
+    fullText += pageText + '\n';
+  }
+
+  return fullText;
+}
+
+function renderTransactions(transactions) {
+
+  const tbody =
+    document.querySelector('#transactionsTable tbody');
+
+  tbody.innerHTML = '';
+
+  transactions.forEach(tx => {
 
     const row = document.createElement('tr');
 
     row.innerHTML = `
       <td>${tx.amount}</td>
       <td>${tx.category}</td>
-      <td>${tx.description}</td>
+      <td>${tx.raw || tx.description}</td>
       <td>${tx.confidence}%</td>
     `;
 
     tbody.appendChild(row);
+
   });
 }
