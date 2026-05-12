@@ -1,3 +1,4 @@
+
 import { parseContacts } from './contacts.js';
 import { parseTransactions } from './parser.js';
 import { categorizeTransaction } from './categorizer.js';
@@ -39,6 +40,8 @@ importBtn.addEventListener('click', async () => {
 
     }
 
+    document.getElementById('rawText').value = txText;
+
     transactions = parseTransactions(txText);
 
     transactions = transactions.map(tx => {
@@ -65,8 +68,11 @@ async function extractPDFText(file) {
 
   const arrayBuffer = await file.arrayBuffer();
 
-  const pdf =
-    await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const loadingTask = pdfjsLib.getDocument({
+    data: arrayBuffer
+  });
+
+  const pdf = await loadingTask.promise;
 
   let fullText = '';
 
