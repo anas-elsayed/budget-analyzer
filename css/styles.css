@@ -1,72 +1,63 @@
 
 body{
-  margin:0;
-  padding:0;
-  background:#f4f6f9;
-  font-family:Arial,sans-serif;
-  color:#222;
+background:#f4f6f9;
+font-family:Arial;
+margin:0;
+padding:0;
 }
 
 header{
-  background:#111827;
-  color:white;
-  padding:20px;
+background:#111827;
+color:white;
+padding:20px;
 }
 
 main{
-  padding:20px;
+padding:20px;
 }
 
-.upload-section,
-.chart-card,
-.table-card,
 .card{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-.upload-section{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-button{
-  width:200px;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#2563eb;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
+background:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
 .stats-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-bottom:20px;
 }
 
-.card h3{
-  margin-top:0;
+button{
+padding:12px 20px;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
 }
 
-#transactionsTable{
-  width:100%;
-  border-collapse:collapse;
+table{
+width:100%;
+border-collapse:collapse;
 }
 
-#transactionsTable th,
-#transactionsTable td{
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:left;
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:left;
 }
 
-#transactionsTable th{
-  background:#f1f5f9;
+textarea{
+width:100%;
+height:300px;
+}
+
+input{
+display:block;
+margin-bottom:10px;
 }

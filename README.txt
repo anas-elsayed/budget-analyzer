@@ -1,12 +1,22 @@
 
-UPLOAD INSTRUCTIONS
+FULL REPLACEMENT PATCH
 
-Replace ONLY these files in your existing repo:
+Replace:
 
+index.html
+css/styles.css
+js/app.js
 js/parser.js
-js/categorizer.js
 js/dashboard.js
+js/contacts.js
 
-Then commit changes to GitHub.
+Commit to GitHub.
 
-No other manual work needed.
+This version includes:
+- REAL PDF extraction
+- PDF worker fix
+- ADIB statement parsing
+- Faculty salary detection
+- Tutoring detection
+- Internal transfer detection
+- Debug extracted text viewer

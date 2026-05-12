@@ -1,45 +1,39 @@
 
 export function parseContacts(text){
 
-  const entries = text.split(/\n\s*\n/);
+const contacts=[];
 
-  const contacts = [];
+const entries=text.split(/\n\s*\n/);
 
-  for(const entry of entries){
+entries.forEach(entry=>{
 
-    const nameMatch = entry.match(/#Name\s*\n(.+)/);
-    const phoneMatch = entry.match(/\+?\d[\d\s\-]+/);
-    const workMatch = entry.match(/#Work\s*\n(.+)/);
+const phoneMatch=entry.match(/01\d{9}/);
 
-    const contact = {
-      name: nameMatch ? nameMatch[1].trim() : "Unknown",
-      phone: phoneMatch ? phoneMatch[0].replace(/\s|\-/g,'') : "",
-      work: workMatch ? workMatch[1].trim() : "",
-      tutoringScore:0,
-      inferredCategory:"unknown"
-    };
+const nameMatch=entry.match(/#Name\s*\n(.+)/);
 
-    const tutoringKeywords = [
-      "طالب",
-      "طالب عرب",
-      "كريدت",
-      "اهلية"
-    ];
+const workMatch=entry.match(/#Work\s*\n(.+)/);
 
-    const combined = `${contact.name} ${contact.work}`;
+const contact={
+name:nameMatch?nameMatch[1].trim():'Unknown',
+phone:phoneMatch?phoneMatch[0]:'',
+work:workMatch?workMatch[1].trim():'',
+category:'unknown'
+};
 
-    tutoringKeywords.forEach(keyword=>{
-      if(combined.includes(keyword)){
-        contact.tutoringScore += 25;
-      }
-    });
+const combined=`${contact.name} ${contact.work}`;
 
-    if(contact.tutoringScore >= 25){
-      contact.inferredCategory = "private_tutoring";
-    }
+if(
+combined.includes('طالب')||
+combined.includes('كريدت')||
+combined.includes('اهلية')
+){
+contact.category='private_tutoring';
+}
 
-    contacts.push(contact);
-  }
+contacts.push(contact);
 
-  return contacts;
+});
+
+return contacts;
+
 }

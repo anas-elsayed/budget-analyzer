@@ -1,86 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Budget Analyzer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Analyzer</title>
 
-  <link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/styles.css">
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
 </head>
 
 <body>
 
-  <header>
-    <h1>Budget Analyzer</h1>
-    <p>Personal Financial Intelligence Dashboard</p>
-  </header>
+<header>
+  <h1>Budget Analyzer</h1>
+  <p>ADIB + Vodafone Financial Intelligence</p>
+</header>
 
-  <main>
+<main>
 
-    <section class="upload-section">
-      <h2>Import Files</h2>
+<section class="card">
 
-      <label>Contacts TXT Export</label>
-      <input type="file" id="contactsFile" />
+<h2>Upload Files</h2>
 
-      <label>Transactions Export</label>
-      <input type="file" id="transactionsFile" />
+<input type="file" id="contactsFile">
+<input type="file" id="transactionsFile">
 
-      <button id="importBtn">Import Data</button>
-    </section>
+<button id="importBtn">Analyze</button>
 
-    <section class="stats-grid">
+</section>
 
-      <div class="card">
-        <h3>Total Income</h3>
-        <p id="totalIncome">0 EGP</p>
-      </div>
+<section class="stats-grid">
 
-      <div class="card">
-        <h3>Total Expenses</h3>
-        <p id="totalExpenses">0 EGP</p>
-      </div>
+<div class="card">
+<h3>Total Income</h3>
+<p id="totalIncome">0 EGP</p>
+</div>
 
-      <div class="card">
-        <h3>Tutoring Income</h3>
-        <p id="tutoringIncome">0 EGP</p>
-      </div>
+<div class="card">
+<h3>Total Expenses</h3>
+<p id="totalExpenses">0 EGP</p>
+</div>
 
-      <div class="card">
-        <h3>Faculty Income</h3>
-        <p id="facultyIncome">0 EGP</p>
-      </div>
+<div class="card">
+<h3>Tutoring Income</h3>
+<p id="tutoringIncome">0 EGP</p>
+</div>
 
-    </section>
+<div class="card">
+<h3>Faculty Salary</h3>
+<p id="facultyIncome">0 EGP</p>
+</div>
 
-    <section class="chart-card">
-      <h2>Income Sources</h2>
-      <canvas id="incomeChart"></canvas>
-    </section>
+</section>
 
-    <section class="table-card">
-      <h2>Transactions</h2>
+<section class="card">
+<h2>Income Sources</h2>
+<canvas id="incomeChart"></canvas>
+</section>
 
-      <table id="transactionsTable">
-        <thead>
-          <tr>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Confidence</th>
-          </tr>
-        </thead>
+<section class="card">
+<h2>Parsed Transactions</h2>
 
-        <tbody></tbody>
-      </table>
-    </section>
+<table id="transactionsTable">
 
-  </main>
+<thead>
+<tr>
+<th>Date</th>
+<th>Amount</th>
+<th>Category</th>
+<th>Description</th>
+</tr>
+</thead>
 
-  <script type="module" src="js/app.js"></script>
+<tbody></tbody>
+
+</table>
+
+</section>
+
+<section class="card">
+<h2>Extracted PDF Text</h2>
+
+<textarea id="debugText"></textarea>
+
+</section>
+
+</main>
+
+<script type="module" src="js/app.js"></script>
+
 </body>
 </html>

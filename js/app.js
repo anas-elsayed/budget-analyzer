@@ -1,116 +1,99 @@
 
 import { parseContacts } from './contacts.js';
 import { parseTransactions } from './parser.js';
-import { categorizeTransaction } from './categorizer.js';
 import { renderDashboard } from './dashboard.js';
 
-let contacts = [];
-let transactions = [];
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const importBtn = document.getElementById('importBtn');
+let contacts=[];
 
-importBtn.addEventListener('click', async () => {
+document.getElementById('importBtn')
+.addEventListener('click',async()=>{
 
-  const contactsFile =
-    document.getElementById('contactsFile').files[0];
+const contactsFile=
+document.getElementById('contactsFile').files[0];
 
-  const transactionsFile =
-    document.getElementById('transactionsFile').files[0];
+const transactionsFile=
+document.getElementById('transactionsFile').files[0];
 
-  if (contactsFile) {
+if(contactsFile){
 
-    const contactsText = await contactsFile.text();
+const text=await contactsFile.text();
 
-    contacts = parseContacts(contactsText);
+contacts=parseContacts(text);
 
-    console.log('Contacts Imported', contacts);
-  }
+console.log(contacts);
 
-  if (transactionsFile) {
+}
 
-    let txText = '';
+if(transactionsFile){
 
-    if (transactionsFile.name.toLowerCase().endsWith('.pdf')) {
+const pdfText=await extractPDFText(transactionsFile);
 
-      txText = await extractPDFText(transactionsFile);
+document.getElementById('debugText').value=pdfText;
 
-    } else {
+const transactions=parseTransactions(pdfText);
 
-      txText = await transactionsFile.text();
+renderDashboard(transactions);
 
-    }
+renderTransactions(transactions);
 
-    document.getElementById('rawText').value = txText;
+console.log(transactions);
 
-    transactions = parseTransactions(txText);
-
-    transactions = transactions.map(tx => {
-
-      const result =
-        categorizeTransaction(tx, contacts);
-
-      return {
-        ...tx,
-        category: result.category,
-        confidence: result.confidence
-      };
-
-    });
-
-    renderDashboard(transactions);
-
-    renderTransactions(transactions);
-  }
+}
 
 });
 
-async function extractPDFText(file) {
+async function extractPDFText(file){
 
-  const arrayBuffer = await file.arrayBuffer();
+const arrayBuffer=await file.arrayBuffer();
 
-  const loadingTask = pdfjsLib.getDocument({
-    data: arrayBuffer
-  });
+const pdf=await pdfjsLib.getDocument({
+data:arrayBuffer
+}).promise;
 
-  const pdf = await loadingTask.promise;
+let fullText='';
 
-  let fullText = '';
+for(let pageNum=1;pageNum<=pdf.numPages;pageNum++){
 
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+const page=await pdf.getPage(pageNum);
 
-    const page = await pdf.getPage(pageNum);
+const textContent=await page.getTextContent();
 
-    const textContent = await page.getTextContent();
+const text=textContent.items
+.map(item=>item.str)
+.join(' ');
 
-    const pageText = textContent.items
-      .map(item => item.str)
-      .join(' ');
+fullText += text + '\n';
 
-    fullText += pageText + '\n';
-  }
-
-  return fullText;
 }
 
-function renderTransactions(transactions) {
+return fullText;
 
-  const tbody =
-    document.querySelector('#transactionsTable tbody');
+}
 
-  tbody.innerHTML = '';
+function renderTransactions(transactions){
 
-  transactions.forEach(tx => {
+const tbody=document.querySelector(
+'#transactionsTable tbody'
+);
 
-    const row = document.createElement('tr');
+tbody.innerHTML='';
 
-    row.innerHTML = `
-      <td>${tx.amount}</td>
-      <td>${tx.category}</td>
-      <td>${tx.raw || tx.description}</td>
-      <td>${tx.confidence}%</td>
-    `;
+transactions.forEach(tx=>{
 
-    tbody.appendChild(row);
+const row=document.createElement('tr');
 
-  });
+row.innerHTML=`
+<td>${tx.date}</td>
+<td>${tx.amount}</td>
+<td>${tx.category}</td>
+<td>${tx.description}</td>
+`;
+
+tbody.appendChild(row);
+
+});
+
 }
